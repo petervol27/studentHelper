@@ -15,6 +15,7 @@ const MainScreen = () => {
   const renderExercise = (level) => {
     alert(`chosen: ${level}`);
   };
+
   return (
     <>
       <div className="container text-center">
