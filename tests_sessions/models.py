@@ -6,7 +6,7 @@ from datetime import timedelta, datetime
 class TestSession(models.Model):
     student = models.ForeignKey(StudentUser, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    date = models.DateField()
+    date = models.DateTimeField(default=datetime.now)  
     given_answer = models.TextField()
     success = models.BooleanField(default=False)
 
