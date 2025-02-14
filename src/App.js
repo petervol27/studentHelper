@@ -5,7 +5,7 @@ import Register from './components/Register';
 import UserContext from './context/UserContext';
 import MainScreen from './components/MainScreen';
 const App = () => {
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState(false);
   return (
     <>
       <UserContext.Provider value={{ user, setUser }}>
