@@ -1,10 +1,12 @@
 from django.db import models
 from students.models import StudentUser
 from questions.models import Question
+from datetime import timedelta, datetime
 
 class TestSession(models.Model):
     student = models.ForeignKey(StudentUser, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    date = models.DateField()
     given_answer = models.TextField()
     success = models.BooleanField(default=False)
 
