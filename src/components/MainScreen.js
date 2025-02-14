@@ -46,13 +46,13 @@ const MainScreen = () => {
             </button>
             <button
               className="btn btn-warning"
-              value="intermidate"
+              value="intermidiate"
               onClick={(e) => {
                 setDifficulty(e.target.value);
                 renderExercise(e.target.value);
               }}
             >
-              Intermidate
+              Intermidiate
             </button>
             <button
               className="btn btn-danger"

@@ -8,6 +8,12 @@ const ExerciseScreen = () => {
         <textarea className="form-control" rows={10}></textarea>
         <input type="submit" className="btn btn-primary mt-3"></input>
       </form>
+      <button
+        className="btn btn-success mt-3"
+        onClick={() => alert('you loser')}
+      >
+        Skip Question
+      </button>
     </div>
   );
 };
