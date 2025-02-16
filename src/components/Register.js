@@ -1,13 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-// import { register } from '../api';
+import { register } from '../api';
 const Register = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const handleRegister = (e) => {
     e.preventDefault();
-    alert('register');
+    register(username, password).then((res) => {
+      console.log(res);
+    });
   };
   return (
     <div className="container">

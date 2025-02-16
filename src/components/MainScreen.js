@@ -8,7 +8,7 @@ const MainScreen = () => {
   const [difficulty, setDifficulty] = useState(null);
   const { user, setUser } = useContext(UserContext);
   const handleLogout = () => {
-    alert('logout');
+    alert('Thank you for using our service');
     setUser(false);
     navigate('/');
   };
@@ -20,7 +20,7 @@ const MainScreen = () => {
     <>
       <div className="container text-center">
         <div className="container position-relative text-center mt-3">
-          <h1 className="mb-0">Welcome to Student Helper</h1>
+          <h1 className="mb-0">Welcome to Student Helper </h1>
           <button
             className="btn btn-primary position-absolute top-0 end-0 "
             onClick={() => handleLogout()}
@@ -31,6 +31,7 @@ const MainScreen = () => {
         <p className="text-secondary">
           Your coding exercises to pass your next interview!
         </p>
+        <h3 className="mb-3">Hello {user}</h3>
         <div className="container w-50 mx-auto">
           <h3>Choose Difficulty:</h3>
           <div className="d-flex justify-content-center align-items-center gap-3 mb-3">

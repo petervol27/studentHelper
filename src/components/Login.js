@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../context/UserContext';
-// import { login } from '../api';
+import { login } from '../api';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,9 +10,16 @@ const Login = () => {
   const { user, setUser } = useContext(UserContext);
   const handleLogin = (e) => {
     e.preventDefault();
-    alert('login');
-    setUser(true);
-    navigate('/main');
+    login(username, password).then((res) => {
+      console.log(res);
+      if (res.refresh) {
+        localStorage.setItem('token', res.refresh);
+        setUser(username);
+        navigate('main');
+      }
+    });
+    // setUser(true);
+    // navigate('/main');
   };
   return (
     <div className="container">
