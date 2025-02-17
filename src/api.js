@@ -26,3 +26,9 @@ export const register = async (username, password) => {
 };
 
 // ---------- EXERCISES ---------------
+export const getQuestions = async (difficulty) => {
+  const response = await axios.post(`${HOST}/questions/list/`, {
+    difficulty: difficulty,
+  });
+  console.log(response.data);
+};

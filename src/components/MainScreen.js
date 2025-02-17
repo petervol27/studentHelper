@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import ExerciseScreen from './ExerciseScreen';
 import UserContext from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { getQuestions } from '../api';
 
 const MainScreen = () => {
   const navigate = useNavigate();
@@ -13,9 +14,8 @@ const MainScreen = () => {
     navigate('/');
   };
   const renderExercise = (level) => {
-    alert(`chosen: ${level}`);
+    getQuestions(level);
   };
-
   return (
     <>
       <div className="container text-center">

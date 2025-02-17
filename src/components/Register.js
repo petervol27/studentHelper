@@ -5,10 +5,16 @@ const Register = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const handleRegister = (e) => {
     e.preventDefault();
     register(username, password).then((res) => {
-      console.log(res);
+      if (res.error) {
+        setError(res.error);
+      } else {
+        alert(res.success);
+        navigate('/');
+      }
     });
   };
   return (
@@ -35,6 +41,7 @@ const Register = () => {
         <div className="text-center mt-3">
           <input type="submit" className="btn btn-primary "></input>
         </div>
+        <p className="text-danger">{error}</p>
       </form>
       <div className="text-center mt-3">
         <button

@@ -7,6 +7,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const { user, setUser } = useContext(UserContext);
   const handleLogin = (e) => {
     e.preventDefault();
@@ -14,12 +15,13 @@ const Login = () => {
       console.log(res);
       if (res.refresh) {
         localStorage.setItem('token', res.refresh);
+        localStorage.setItem('name', username);
         setUser(username);
         navigate('main');
+      } else {
+        setError(res.response.data.detail);
       }
     });
-    // setUser(true);
-    // navigate('/main');
   };
   return (
     <div className="container">
@@ -45,6 +47,7 @@ const Login = () => {
         <div className="text-center mt-3">
           <input type="submit" className="btn btn-primary"></input>
         </div>
+        <p className="text-danger">{error}</p>
       </form>
       <div className="text-center mt-3">
         <button
