@@ -4,7 +4,7 @@ from django.db import models
 class Question(models.Model):
     DIFFICULTY_CHOICES = [
         ("beginner", "beginner"),
-        ("intermidiate", "Intermidiate"),
+        ("intermediate", "intermediate "),
         ("professional", "Professional"),
     ]
 
