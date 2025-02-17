@@ -72,7 +72,7 @@ def add_question(request):
         return Response({"error": "Invalid JSON."}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def list_question(request):
     questions = Question.objects.filter(difficulty=request.data["difficulty"])
     question_list = [
