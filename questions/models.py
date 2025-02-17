@@ -1,10 +1,11 @@
 from django.db import models
 
+
 class Question(models.Model):
     DIFFICULTY_CHOICES = [
-        ('easy', 'Easy'),
-        ('intermidiate', 'Intermidiate'),
-        ('professional', 'Professional'),
+        ("beginner", "beginner"),
+        ("intermidiate", "Intermidiate"),
+        ("professional", "Professional"),
     ]
 
     # Explicitly defining an id field (this is optional, Django provides it by default)

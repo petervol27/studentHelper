@@ -84,6 +84,6 @@ def list_question(request):
         }
         for q in questions
     ]
-    randomized_questions = random.shuffle(question_list)
+    random.shuffle(question_list)
 
-    return Response(randomized_questions, status=status.HTTP_200_OK)
+    return Response(question_list, status=status.HTTP_200_OK)
