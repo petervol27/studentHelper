@@ -38,7 +38,7 @@ def submit_code(request):
         question = Question.objects.get(id=question_id)
         expected_output = question.result.strip()
 
-        # Extract function name from the question description
+        # Dynamically extract function name from the question description
         function_name = None
         words = question.description.split(" ")
         for i, word in enumerate(words):
@@ -49,6 +49,15 @@ def submit_code(request):
         if not function_name:
             return Response(
                 {"error": "Function name not found in question description."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # 🚨 *Ensure the function is defined*
+        if f"def {function_name}(" not in user_code:
+            return Response(
+                {
+                    "result": f"❌ Your code must define {function_name}() using def {function_name}()"
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -63,7 +72,7 @@ def submit_code(request):
             # Execute the user code
             exec(user_code, exec_globals)
 
-            # Check if the required function is defined
+            # Check if function is defined
             if function_name not in exec_globals or not callable(
                 exec_globals[function_name]
             ):
@@ -75,16 +84,16 @@ def submit_code(request):
             # Get the user's function
             user_function = exec_globals[function_name]
 
+            # Create a dynamic test input based on the function name
+            test_input = ["Alice"] if "name" in function_name else [2]
+
             # Run the function with test input
-            test_input = ["Alice"]  # Example input for greet
-            user_return_value = user_function(
-                *test_input
-            )  # Capture function return value
+            user_return_value = user_function(*test_input)
 
             # Capture printed output
             user_print_output = sys.stdout.getvalue().strip()
 
-            # Determine final output
+            # Determine final output (either return value or print output)
             user_output = (
                 user_print_output if user_print_output else str(user_return_value)
             )
