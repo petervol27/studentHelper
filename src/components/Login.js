@@ -8,7 +8,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { user, setUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
   const handleLogin = (e) => {
     e.preventDefault();
     login(username, password).then((res) => {
