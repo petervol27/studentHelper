@@ -7,14 +7,17 @@ import { getQuestions } from '../api';
 const MainScreen = () => {
   const navigate = useNavigate();
   const [difficulty, setDifficulty] = useState(null);
+  const [questions, setQuestions] = useState([]);
   const { user, setUser } = useContext(UserContext);
   const handleLogout = () => {
     alert('Thank you for using our service');
     setUser(false);
     navigate('/');
   };
-  const renderExercise = (level) => {
-    getQuestions(level);
+  const renderExercise = async (level) => {
+    const fetchedQuestions = await getQuestions(level);
+    setQuestions(fetchedQuestions);
+    setDifficulty(level);
   };
   return (
     <>
@@ -39,7 +42,6 @@ const MainScreen = () => {
               className="btn btn-success"
               value="beginner"
               onClick={(e) => {
-                setDifficulty(e.target.value);
                 renderExercise(e.target.value);
               }}
             >
@@ -47,9 +49,8 @@ const MainScreen = () => {
             </button>
             <button
               className="btn btn-warning"
-              value="intermidiate"
+              value="intermediate"
               onClick={(e) => {
-                setDifficulty(e.target.value);
                 renderExercise(e.target.value);
               }}
             >
@@ -59,7 +60,6 @@ const MainScreen = () => {
               className="btn btn-danger"
               value="professional"
               onClick={(e) => {
-                setDifficulty(e.target.value);
                 renderExercise(e.target.value);
               }}
             >
@@ -68,7 +68,7 @@ const MainScreen = () => {
           </div>
         </div>
       </div>
-      {difficulty && <ExerciseScreen />}
+      {difficulty && <ExerciseScreen questions={questions} />}
     </>
   );
 };

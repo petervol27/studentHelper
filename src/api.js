@@ -30,5 +30,18 @@ export const getQuestions = async (difficulty) => {
   const response = await axios.post(`${HOST}/questions/list/`, {
     difficulty: difficulty,
   });
-  console.log(response.data);
+  return response.data;
+};
+
+export const submitCode = async (code, id) => {
+  const credentials = { code: code, question_id: id };
+  try {
+    const response = await axios.post(
+      `${HOST}/questions/submit_answer`,
+      credentials
+    );
+    return response.data;
+  } catch (error) {
+    return error;
+  }
 };
