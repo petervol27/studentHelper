@@ -28,38 +28,15 @@ def list_question(request):
 
 @api_view(["POST"])
 def submit_code(request):
-    """Evaluates user-submitted code and ensures a function exists before execution"""
+    """Evaluates user-submitted code and returns result"""
     try:
-        data = request.data
+        data = request.data  # DRF automatically parses JSON
         question_id = data.get("question_id")
         user_code = data.get("code")
 
-        # Retrieve the question from the database
+        # Retrieve the question
         question = Question.objects.get(id=question_id)
         expected_output = question.result.strip()
-
-        # Dynamically extract function name from the question description
-        function_name = None
-        words = question.description.split(" ")
-        for i, word in enumerate(words):
-            if word.startswith("") and word.endswith(""):
-                function_name = word.strip("`")
-                break
-
-        if not function_name:
-            return Response(
-                {"error": "Function name not found in question description."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # 🚨 *Ensure the function is defined*
-        if f"def {function_name}(" not in user_code:
-            return Response(
-                {
-                    "result": f"❌ Your code must define {function_name}() using def {function_name}()"
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
 
         # Safe execution environment
         exec_globals = {}
@@ -72,42 +49,19 @@ def submit_code(request):
             # Execute the user code
             exec(user_code, exec_globals)
 
-            # Check if function is defined
-            if function_name not in exec_globals or not callable(
-                exec_globals[function_name]
-            ):
-                return Response(
-                    {"result": f"❌ Function {function_name} is not defined properly."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+            # Get printed output
+            user_output = sys.stdout.getvalue().strip()
 
-            # Get the user's function
-            user_function = exec_globals[function_name]
-
-            # Create a dynamic test input based on the function name
-            test_input = ["Alice"] if "name" in function_name else [2]
-
-            # Run the function with test input
-            user_return_value = user_function(*test_input)
-
-            # Capture printed output
-            user_print_output = sys.stdout.getvalue().strip()
-
-            # Determine final output (either return value or print output)
-            user_output = (
-                user_print_output if user_print_output else str(user_return_value)
-            )
-
-            # Compare user function's output with expected output
-            is_correct = user_output.strip() == expected_output.strip()
+            # Compare user output with expected output
+            is_correct = user_output == expected_output
             result = (
                 "✅ Correct!"
                 if is_correct
-                else f"❌ Incorrect! Expected: '{expected_output}', Got: '{user_output}'"
+                else f"❌ Incorrect! Expected: {expected_output}, Got: {user_output}"
             )
 
         except Exception as e:
-            result = f"⚠️ Error in function execution: {str(e)}"
+            result = f"⚠️ Error: {str(e)}"
 
         # Reset stdout
         sys.stdout = old_stdout
@@ -115,10 +69,7 @@ def submit_code(request):
         return Response({"result": result}, status=status.HTTP_200_OK)
 
     except Exception as e:
-        return Response(
-            {"error": f"⚠️ Server Error: {str(e)}"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        )
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
