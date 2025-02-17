@@ -4,14 +4,17 @@ from rest_framework.response import Response
 from .models import StudentUser
 from .serializers import StudentUserSerializer
 
+
 # Register a New User
 @api_view(["POST"])
 def register(request):
-    serializer = StudentUserSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()  # Save the new user to the database
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        user = StudentUser(username=request.data["username"])
+        user.set_password(request.data["password"])  # This hashes the password.
+        user.save()
+        return Response({"success": "successfully registered"})
+    except Exception as e:
+        return Response({"error": "error check credentials"})
 
 
 # List All Students and Create a New Student
