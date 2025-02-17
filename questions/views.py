@@ -39,7 +39,6 @@ def submit_code(request):
         expected_output = question.result.strip()
 
         # Extract function name from the question description
-        # Assuming the function name is always wrapped in backticks (function_name)
         function_name = None
         words = question.description.split(" ")
         for i, word in enumerate(words):
@@ -76,22 +75,30 @@ def submit_code(request):
             # Get the user's function
             user_function = exec_globals[function_name]
 
-            # Define a default test input based on the function name
-            test_input = [2]  # Default test input, can be improved
+            # Run the function with test input
+            test_input = ["Alice"]  # Example input for greet
+            user_return_value = user_function(
+                *test_input
+            )  # Capture function return value
 
-            # Run the function and get its output
-            user_output = str(user_function(*test_input)).strip()
+            # Capture printed output
+            user_print_output = sys.stdout.getvalue().strip()
 
-            # Compare user function's return value with expected output
-            is_correct = user_output == expected_output
+            # Determine final output
+            user_output = (
+                user_print_output if user_print_output else str(user_return_value)
+            )
+
+            # Compare user function's output with expected output
+            is_correct = user_output.strip() == expected_output.strip()
             result = (
                 "✅ Correct!"
                 if is_correct
-                else f"❌ Incorrect! Expected: {expected_output}, Got: {user_output}"
+                else f"❌ Incorrect! Expected: '{expected_output}', Got: '{user_output}'"
             )
 
         except Exception as e:
-            result = f"⚠️ Error: {str(e)}"
+            result = f"⚠️ Error in function execution: {str(e)}"
 
         # Reset stdout
         sys.stdout = old_stdout
@@ -99,7 +106,10 @@ def submit_code(request):
         return Response({"result": result}, status=status.HTTP_200_OK)
 
     except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": f"⚠️ Server Error: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
 
 
 @api_view(["POST"])
