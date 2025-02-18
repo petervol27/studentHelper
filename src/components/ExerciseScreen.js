@@ -7,12 +7,11 @@ const ExerciseScreen = ({ questions }) => {
   const [code, setCode] = useState('');
   const [checkedAnswer, setCheckedAnswer] = useState('');
 
-  // ✅ Properly update `currentQuestion` when `currentQuestionNum` changes
   useEffect(() => {
     if (currentQuestionNum < questions.length) {
       setCurrentQuestion(questions[currentQuestionNum]);
-      setCheckedAnswer(''); // Reset feedback
-      setCode(''); // Reset textarea for new question
+      setCheckedAnswer('');
+      setCode('');
     }
   }, [currentQuestionNum, questions]);
 
